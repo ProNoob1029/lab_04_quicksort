@@ -211,10 +211,10 @@ static void checkQuicksortCorrectness() {
 
 
 int main() {
-    profiler.reset("Quicksort_Cases_Comparison");
-    quicksortCompareCases();
-    profiler.reset("Quicksort_vs_Heapsort_Comparison");
-    quicksortVsHeapsortNumOfOps();
+    // profiler.reset("Quicksort_Cases_Comparison");
+    // quicksortCompareCases();
+    // profiler.reset("Quicksort_vs_Heapsort_Comparison");
+    // quicksortVsHeapsortNumOfOps();
     profiler.reset();
     checkQuicksortCorrectness();
     return 0;
