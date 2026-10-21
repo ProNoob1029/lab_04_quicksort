@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include "common.h"
 
 constexpr char algorithmsComparison[] = "1_quicksort_vs_heapsort_ops_comparison";
@@ -18,19 +17,14 @@ static int right(const int i) {
     return 2 * i + 1;
 }
 
-static bool compare(const int first, const int second) {
-    profiler.countOperation(heapsortCompareAverage, N_SIZE);
-    return first > second;
-}
-
 static void heapify(int arr[], const int size, const int i) {
     const int leftI = left(i);
     const int rightI = right(i);
     int swapI = i;
-    if (leftI <= size && compare(arr[leftI], arr[swapI])) {
+    if (leftI <= size && greater(arr[leftI], arr[swapI], heapsortCompareAverage)) {
         swapI = leftI;
     }
-    if (rightI <= size && compare(arr[rightI], arr[swapI])) {
+    if (rightI <= size && greater(arr[rightI], arr[swapI], heapsortCompareAverage)) {
         swapI = rightI;
     }
     if (swapI != i) {

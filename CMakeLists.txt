@@ -7,4 +7,5 @@ add_executable(lab_04_quicksort main.cpp
         Profiler.h
         heapsort.h
         common.h
-        quicksort.h)
+        quicksort.h
+        hybrid.h)

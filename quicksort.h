@@ -1,6 +1,4 @@
 #pragma once
-#include <iostream>
-#include "Profiler.h"
 #include "common.h"
 
 constexpr char quicksortCasesComparison[] = "1_quicksort_cases_comparison";

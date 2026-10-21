@@ -1,8 +1,7 @@
 #include <iostream>
-#include "Profiler.h"
-#include "common.h"
 #include "quicksort.h"
 #include "heapsort.h"
+#include "hybrid.h"
 
 static void quicksortVsHeapsortNumOfOps() {
     std::cout << "profiling quicksort vs heapsort num of ops\n";
@@ -37,10 +36,10 @@ static void quicksortVsHeapsortNumOfOps() {
 }
 
 int main() {
-    profiler.reset("Quicksort_Cases_Comparison");
-    quicksortCompareCases();
-    profiler.reset("Quicksort_vs_Heapsort_Comparison");
-    quicksortVsHeapsortNumOfOps();
+    // profiler.reset("Quicksort_Cases_Comparison");
+    // quicksortCompareCases();
+    // profiler.reset("Quicksort_vs_Heapsort_Comparison");
+    // quicksortVsHeapsortNumOfOps();
     profiler.reset();
     checkQuicksortCorrectness();
     return 0;
