@@ -5,4 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(lab_04_quicksort main.cpp
         Profiler.h
-        heapsort.h)
+        heapsort.h
+        common.h
+        quicksort.h)

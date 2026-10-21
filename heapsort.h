@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Profiler.h"
+#include "common.h"
 
 constexpr char algorithmsComparison[] = "1_quicksort_vs_heapsort_ops_comparison";
 constexpr char algorithmsAssignComparison[] = "quicksort_vs_heapsort_assign_comparison";
@@ -9,10 +9,6 @@ constexpr char algorithmsCompareComparison[] = "quicksort_vs_heapsort_compare_co
 constexpr char heapsortOpsAverage[] = "heapsort_ops_average";
 constexpr char heapsortAssignAverage[] = "heapsort_assign_average";
 constexpr char heapsortCompareAverage[] = "heapsort_compare_average";
-
-static auto profiler = Profiler();
-
-static int N_SIZE = 0;
 
 static int left(const int i) {
     return 2 * i;
