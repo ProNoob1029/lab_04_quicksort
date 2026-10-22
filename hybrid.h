@@ -96,6 +96,41 @@ static void testThresholds() {
     profiler.divideValues(hybridCompare, numOfOpsTests);
 }
 
+static void findThresholds() {
+    constexpr int prefilledArrays = 10;
+    constexpr int n = 1000;
+    constexpr int timingTests = 1000;
+    constexpr int numOfOpsTests = 100;
+    int arr[prefilledArrays][n], tempArr[prefilledArrays][n];
+
+    //pre init to remove randoms in-between thresholds
+    for (auto & a : arr) {
+        FillRandomArray(a, n);
+    }
+
+    for (int threshold = 5; threshold <= 50; threshold++) {
+        std::cout << "\nThreshold: " << threshold;
+
+        for (int i = prefilledArrays; i <= numOfOpsTests; i++) {
+            CopyArray(tempArr, arr, prefilledArrays);
+            for (auto & a : tempArr) {
+                quicksortHybridThresholdTesting(a, n, threshold);
+            }
+        }
+
+        for (int i = prefilledArrays; i <= timingTests; i += prefilledArrays) {
+            CopyArray(tempArr, arr, prefilledArrays);
+            profiler.startTimer(hybridTime, threshold);
+            for (auto & a : tempArr) {
+                quicksortHybridThresholdTesting(a, n, threshold);
+            }
+            profiler.stopTimer(hybridTime, threshold);
+        }
+    }
+    profiler.divideValues(hybridAssign, numOfOpsTests);
+    profiler.divideValues(hybridCompare, numOfOpsTests);
+}
+
 static void checkHybridQuicksortCorrectness() {
     std::cout << "\n==========================================\n";
     std::cout << "\nChecking hybrid quicksort correctness...\n";

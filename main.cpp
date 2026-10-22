@@ -40,7 +40,7 @@ int main() {
     // quicksortCompareCases();
     // profiler.reset("Quicksort_vs_Heapsort_Comparison");
     // quicksortVsHeapsortNumOfOps();
-    testThresholds();
+    findThresholds();
     profiler.reset();
     // checkHybridQuicksortCorrectness();
     return 0;
