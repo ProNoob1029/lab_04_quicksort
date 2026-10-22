@@ -3,8 +3,9 @@
 
 constexpr char hybridAssign[] = "hybrid_quicksort_assign";
 constexpr char hybridCompare[] = "hybrid_quicksort_compare";
+constexpr char hybridTime[] = "hybrid_quicksort_time";
 
-const int THRESHOLD = 5;
+inline int THRESHOLD = 5;
 
 static void insertionSort(int arr[], const int left, const int right) {
     for (int i = left + 1; i <= right; i++) {
@@ -46,7 +47,7 @@ static void quicksortHybrid(int arr[], const int left, const int right) {
         insertionSort(arr, left, right);
         return;
     }
-    const int pos = partition(arr, left, right);
+    const int pos = partitionHybrid(arr, left, right);
     quicksortHybrid(arr, left, pos - 1);
     quicksortHybrid(arr, pos + 1, right);
 }
@@ -54,4 +55,65 @@ static void quicksortHybrid(int arr[], const int left, const int right) {
 static void quicksortHybrid(int arr[], const int n) {
     N_SIZE = n;
     quicksortHybrid(arr, 0, n - 1);
+}
+
+static void quicksortHybridThresholdTesting(int arr[], const int n, const int threshold) {
+    N_SIZE = threshold;
+    THRESHOLD = threshold;
+    quicksortHybrid(arr, 0, n - 1);
+}
+
+static void profileHybridQuicksort(const int threshold, const int numOfOpsTests) {
+    constexpr int n = 2000;
+    constexpr int timingTests = 2000;
+    constexpr int prefilledArrays = 10;
+    int arr[n], tempArr[prefilledArrays][n];
+
+    for (int i = 0; i < numOfOpsTests; i++) {
+        FillRandomArray(arr, n);
+        quicksortHybridThresholdTesting(arr, n, threshold);
+    }
+
+    for (int i = prefilledArrays; i <= timingTests; i += prefilledArrays) {
+        for (auto & a : tempArr) {
+            FillRandomArray(a, n);
+        }
+        profiler.startTimer(hybridTime, threshold);
+        for (auto & a : tempArr) {
+            quicksortHybridThresholdTesting(a, n, threshold);
+        }
+        profiler.stopTimer(hybridTime, threshold);
+    }
+}
+
+static void testThresholds() {
+    constexpr int numOfOpsTests = 100;
+    for (int threshold = 5; threshold <= 15; threshold++) {
+        std::cout << "\nThreshold: " << threshold;
+        profileHybridQuicksort(threshold, numOfOpsTests);
+    }
+    profiler.divideValues(hybridAssign, numOfOpsTests);
+    profiler.divideValues(hybridCompare, numOfOpsTests);
+}
+
+static void checkHybridQuicksortCorrectness() {
+    std::cout << "\n==========================================\n";
+    std::cout << "\nChecking hybrid quicksort correctness...\n";
+
+    constexpr int n = 8;
+    int arr[] = {4, 8, 1, 7, 8, 3, 2, 1};
+
+    std::cout << "\nInitial array: ";
+    printArray(arr, n);
+
+    quicksortHybrid(arr, n);
+
+    std::cout << "\nSorted array: ";
+    printArray(arr, n);
+
+    if (IsSorted(arr, n)) {
+        std::cout << "\nIt's sorted!\n";
+    } else {
+        std::cout << "\nNot sorted!\n";
+    }
 }
