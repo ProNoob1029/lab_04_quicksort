@@ -17,37 +17,40 @@ static int right(const int i) {
     return 2 * i + 1;
 }
 
+template<bool COUNT>
 static void heapify(int arr[], const int size, const int i) {
     const int leftI = left(i);
     const int rightI = right(i);
     int swapI = i;
-    if (leftI <= size && greater(arr[leftI], arr[swapI], heapsortCompareAverage)) {
+    if (leftI <= size && greater<COUNT>(arr[leftI], arr[swapI], heapsortCompareAverage)) {
         swapI = leftI;
     }
-    if (rightI <= size && greater(arr[rightI], arr[swapI], heapsortCompareAverage)) {
+    if (rightI <= size && greater<COUNT>(arr[rightI], arr[swapI], heapsortCompareAverage)) {
         swapI = rightI;
     }
     if (swapI != i) {
         std::swap(arr[i], arr[swapI]);
-        profiler.countOperation(heapsortAssignAverage, N_SIZE, 3);
-        heapify(arr, size, swapI);
+        if constexpr (COUNT) profiler.countOperation(heapsortAssignAverage, N_SIZE, 3);
+        heapify<COUNT>(arr, size, swapI);
     }
 }
 
+template<bool COUNT>
 static void buildHeap(int arr[], const int size) {
     for (int i = size / 2; i > 0; i--) {
-        heapify(arr, size, i);
+        heapify<COUNT>(arr, size, i);
     }
 }
 
+template<bool COUNT>
 static void heapsort(int arr[], const int n) {
     N_SIZE = n;
-    buildHeap(arr, n);
+    buildHeap<COUNT>(arr, n);
     int heapSize = n;
     for (int i = n; i >= 2; i--) {
         std::swap(arr[1], arr[i]);
-        profiler.countOperation(heapsortAssignAverage, N_SIZE, 3);
+        if constexpr (COUNT) profiler.countOperation(heapsortAssignAverage, N_SIZE, 3);
         heapSize--;
-        heapify(arr, heapSize, 1);
+        heapify<COUNT>(arr, heapSize, 1);
     }
 }

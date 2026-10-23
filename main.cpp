@@ -17,8 +17,8 @@ static void quicksortVsHeapsortNumOfOps() {
         for (int test = 0; test < numOfTests; test++) {
             FillRandomArray(arr, n);
             CopyArray(tempArr + 1, arr, n);
-            quicksort(arr, n);
-            heapsort(tempArr, n);
+            quicksort<true>(arr, n);
+            heapsort<true>(tempArr, n);
         }
     }
 
@@ -40,8 +40,9 @@ int main() {
     // quicksortCompareCases();
     // profiler.reset("Quicksort_vs_Heapsort_Comparison");
     // quicksortVsHeapsortNumOfOps();
-    findThresholds();
-    profiler.reset();
+    // findThresholdsNumOfOps();
+    findThresholdsTiming();
+    profiler.showReport();
     // checkHybridQuicksortCorrectness();
     return 0;
 }

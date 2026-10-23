@@ -13,7 +13,9 @@ static void printArray(int arr[], const int n) {
     std::cout << '\n';
 }
 
+
+template<bool COUNT>
 static bool greater(const int first, const int second, const char opName[]) {
-    profiler.countOperation(opName, N_SIZE);
+    if constexpr (COUNT) profiler.countOperation(opName, N_SIZE);
     return first > second;
 }

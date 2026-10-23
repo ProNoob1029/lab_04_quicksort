@@ -25,9 +25,10 @@ static const char *quicksortAssign = quicksortAssignAverage;
 static const char *quicksortCompare = quicksortCompareAverage;
 static const char *quicksortOps = quicksortOpsAverage;
 
+template <bool COUNT>
 static int partition(int arr[], const int left, const int right) {
     const int pivot = arr[right];
-    profiler.countOperation(quicksortAssign, N_SIZE);
+    if constexpr (COUNT) profiler.countOperation(quicksortAssign, N_SIZE);
     int i = left - 1;
     for (int j = left; j < right; j++) {
         if (arr[j] <= pivot) {
@@ -35,28 +36,30 @@ static int partition(int arr[], const int left, const int right) {
             //No swap needed if i and j are at same index
             if (i != j) {
                 std::swap(arr[j], arr[i]);
-                profiler.countOperation(quicksortAssign, N_SIZE, 3);
+                if constexpr (COUNT) profiler.countOperation(quicksortAssign, N_SIZE, 3);
             }
         }
-        profiler.countOperation(quicksortCompare, N_SIZE);
+        if constexpr (COUNT) profiler.countOperation(quicksortCompare, N_SIZE);
     }
     std::swap(arr[i + 1], arr[right]);
-    profiler.countOperation(quicksortAssign, N_SIZE, 3);
+    if constexpr (COUNT) profiler.countOperation(quicksortAssign, N_SIZE, 3);
     return i + 1;
 }
 
+template <bool COUNT>
 static void quicksort(int arr[], const int left, const int right) {
     if (left >= right) {
         return;
     }
-    const int pos = partition(arr, left, right);
-    quicksort(arr, left, pos - 1);
-    quicksort(arr, pos + 1, right);
+    const int pos = partition<COUNT>(arr, left, right);
+    quicksort<COUNT>(arr, left, pos - 1);
+    quicksort<COUNT>(arr, pos + 1, right);
 }
 
+template <bool COUNT>
 static void quicksort(int arr[], const int n) {
     N_SIZE = n;
-    quicksort(arr, 0, n - 1);
+    quicksort<COUNT>(arr, 0, n - 1);
 }
 
 static void arrangeBestCase(int arr[], const int left, const int right) {
@@ -125,7 +128,7 @@ static void quicksortProfilingNumOfOps(const Case testCase) {
         std::cout << "n: " << n << '\n';
         for (int test = 0; test < numOfTests; test++) {
             generateQuicksortArray(arr, n, testCase);
-            quicksort(arr, n);
+            quicksort<true>(arr, n);
         }
     }
 
@@ -156,7 +159,7 @@ static void checkQuicksortCorrectness() {
     std::cout << "\nInitial array: ";
     printArray(arr, n);
 
-    quicksort(arr, n);
+    quicksort<false>(arr, n);
 
     std::cout << "\nSorted array: ";
     printArray(arr, n);

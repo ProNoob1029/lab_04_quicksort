@@ -11159,7 +11159,7 @@ public:
 	/**
 	* stops the timer for operation name, at the specified size
 	*/
-	void stopTimer(const char *name, int size)
+	int stopTimer(const char *name, int size)
     {
         std::chrono::time_point<std::chrono::high_resolution_clock> stopTime = std::chrono::high_resolution_clock::now();
         if(!countersDisabled) {
@@ -11176,8 +11176,9 @@ public:
             throw "no such size for series";
         }
         TIME_MEASURE &tm = timeMap[name][size];
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - tm.lastStart);
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stopTime - tm.lastStart);
         tm.totalTime += (int)duration.count();
+        return (int)duration.count();
 	}
 
     /**
