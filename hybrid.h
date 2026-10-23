@@ -7,8 +7,6 @@ constexpr char hybridQuicksort[] = "hybrid_quicksort";
 constexpr char hybridTime[] = "hybrid_quicksort_time";
 constexpr char DEFAULT_THRESHOLD = 50;
 
-inline int THRESHOLD = DEFAULT_THRESHOLD;
-
 template<bool COUNT>
 static void insertionSort(int arr[], const int left, const int right) {
     for (int i = left + 1; i <= right; i++) {
@@ -47,28 +45,31 @@ static int partitionHybrid(int arr[], const int left, const int right) {
 }
 
 template<bool COUNT>
-static void quicksortHybrid(int arr[], const int left, const int right) {
-    if (right - left + 1 < THRESHOLD) {
+static void quicksortHybrid(int arr[], const int left, const int right, const int threshold = DEFAULT_THRESHOLD) {
+    if (right - left + 1 < threshold) {
         insertionSort<COUNT>(arr, left, right);
         return;
     }
     const int pos = partitionHybrid<COUNT>(arr, left, right);
-    quicksortHybrid<COUNT>(arr, left, pos - 1);
-    quicksortHybrid<COUNT>(arr, pos + 1, right);
+    quicksortHybrid<COUNT>(arr, left, pos - 1, threshold);
+    quicksortHybrid<COUNT>(arr, pos + 1, right, threshold);
+}
+
+template<bool COUNT>
+static void quicksortHybridThreshold(int arr[], const int n, const int threshold = DEFAULT_THRESHOLD) {
+    N_SIZE = n;
+    quicksortHybrid<COUNT>(arr, 0, n - 1, threshold);
 }
 
 template<bool COUNT>
 static void quicksortHybrid(int arr[], const int n) {
-    N_SIZE = n;
-    THRESHOLD = DEFAULT_THRESHOLD;
-    quicksortHybrid<COUNT>(arr, 0, n - 1);
+    quicksortHybridThreshold<COUNT>(arr, n);
 }
 
 template<bool COUNT>
 static void quicksortHybridThresholdTesting(int arr[], const int n, const int threshold) {
     N_SIZE = threshold;
-    THRESHOLD = threshold;
-    quicksortHybrid<COUNT>(arr, 0, n - 1);
+    quicksortHybrid<COUNT>(arr, 0, n - 1, threshold);
 }
 
 static void findThresholdsNumOfOps() {
