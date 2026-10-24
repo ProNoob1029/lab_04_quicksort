@@ -163,47 +163,47 @@ static void quicksortCompareCases() {
 }
 
 static void checkQuicksortCorrectness() {
-    std::cout << "\n==========================================\n";
-    std::cout << "\nChecking quicksort correctness...\n";
+    std::cout << "==========================================\n";
+    std::cout << "Checking quicksort correctness...\n";
 
     constexpr int n = 8;
     int arr[] = {4, 8, 1, 7, 8, 3, 2, 1};
 
-    std::cout << "\nInitial array: ";
+    std::cout << "Initial array: ";
     printArray(arr, n);
 
     quicksort<false>(arr, n);
 
-    std::cout << "\nSorted array: ";
+    std::cout << "Sorted array: ";
     printArray(arr, n);
 
     if (IsSorted(arr, n)) {
-        std::cout << "\nIt's sorted!\n";
+        std::cout << "It's sorted!\n";
     } else {
-        std::cout << "\nNot sorted!\n";
+        std::cout << "Not sorted!\n";
     }
 }
 
 static void checkQuicksortRandoCorrectness() {
-    std::cout << "\n==========================================\n";
-    std::cout << "\nChecking quicksort with random pivot correctness...\n";
+    std::cout << "==========================================\n";
+    std::cout << "Checking quicksort with random pivot correctness...\n";
 
     constexpr int n = 8;
     int arr[] = {4, 8, 1, 7, 8, 3, 2, 1};
 
-    std::cout << "\nInitial array: ";
+    std::cout << "Initial array: ";
     printArray(arr, n);
 
     //seeding random
     srand(time(nullptr));
     quicksortRando(arr, n);
 
-    std::cout << "\nSorted array: ";
+    std::cout << "Sorted array: ";
     printArray(arr, n);
 
     if (IsSorted(arr, n)) {
-        std::cout << "\nIt's sorted!\n";
+        std::cout << "It's sorted!\n";
     } else {
-        std::cout << "\nNot sorted!\n";
+        std::cout << "Not sorted!\n";
     }
 }

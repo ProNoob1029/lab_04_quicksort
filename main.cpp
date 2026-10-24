@@ -1,3 +1,43 @@
+/**
+ *  Author: Morar Dragoș Bogdan
+ *  Group: 30424
+ *  Lab: 4
+ *  Subject: Quicksort Comparisons
+ *  Quicksort cases:
+ *          Average: Quicksort good yes O(n log n)!
+ *          Best: Take an already sorted array and
+ *      recursively swap the middle of the partition
+ *      with the end so the pivot selection is always
+ *      good.
+ *          Worst: A sorted array is worst when we
+ *      take as pivot the end of the array because it
+ *      has to always swap.
+ *  Quicksort vs Heapsort:
+ *      Heapsort does about 58% more operations than
+ *      quicksort, although quicksort is much more
+ *      random.
+ *  Hybridization threshold:
+ *          From my very difficult findings, hybridization
+ *      has less operations than normal quicksort only
+ *      for a threshold of 5, and it's only a 1%
+ *      improvement. Increasing threshold increases
+ *      operations.
+ *          When testing time, the advantage of hybrid
+ *      quicksort shows, because the linear operations
+ *      of insertions sort go quicker. Here I struggled
+ *      to get a clean graph, so I resorted to modifying
+ *      the profiler in order to be able to calculate
+ *      the min and median of the statistics. Even then
+ *      I had to run a lot of runs to smooth it out.
+ *      For our operations on ints I found a good
+ *      thresholds of 50.
+ *  Quicksort vs Hybrid Quicksort
+ *          Operations are only 1% better for hybrid
+ *      quicksort with a thresholds of 5.
+ *          Time is about 37% better for hybrid
+ *      quicksort.
+ */
+
 #include <iostream>
 #include "quicksort.h"
 #include "heapsort.h"

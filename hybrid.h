@@ -169,23 +169,23 @@ static void findThresholdsTiming() {
 }
 
 static void checkHybridQuicksortCorrectness() {
-    std::cout << "\n==========================================\n";
-    std::cout << "\nChecking hybrid quicksort correctness...\n";
+    std::cout << "==========================================\n";
+    std::cout << "Checking hybrid quicksort correctness...\n";
 
     constexpr int n = 8;
     int arr[] = {4, 8, 1, 7, 8, 3, 2, 1};
 
-    std::cout << "\nInitial array: ";
+    std::cout << "Initial array: ";
     printArray(arr, n);
 
     quicksortHybrid<false>(arr, n);
 
-    std::cout << "\nSorted array: ";
+    std::cout << "Sorted array: ";
     printArray(arr, n);
 
     if (IsSorted(arr, n)) {
-        std::cout << "\nIt's sorted!\n";
+        std::cout << "It's sorted!\n";
     } else {
-        std::cout << "\nNot sorted!\n";
+        std::cout << "Not sorted!\n";
     }
 }
