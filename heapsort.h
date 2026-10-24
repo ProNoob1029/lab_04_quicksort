@@ -1,9 +1,9 @@
 #pragma once
 #include "common.h"
 
-constexpr char algorithmsComparison[] = "1_quicksort_vs_heapsort_ops_comparison";
-constexpr char algorithmsAssignComparison[] = "quicksort_vs_heapsort_assign_comparison";
-constexpr char algorithmsCompareComparison[] = "quicksort_vs_heapsort_compare_comparison";
+constexpr char quickVsHeap[] = "1_quicksort_vs_heapsort_ops_comparison";
+constexpr char quickVsHeapAssign[] = "quicksort_vs_heapsort_assign_comparison";
+constexpr char quickVsHeapCompare[] = "quicksort_vs_heapsort_compare_comparison";
 
 constexpr char heapsortOpsAverage[] = "heapsort_ops_average";
 constexpr char heapsortAssignAverage[] = "heapsort_assign_average";

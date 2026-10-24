@@ -18,6 +18,7 @@ constexpr char quicksortAssignBest[] = "quicksort_assign_best";
 constexpr char quicksortCompareBest[] = "quicksort_compare_best";
 constexpr char quicksortAssignWorst[] = "quicksort_assign_worst";
 constexpr char quicksortCompareWorst[] = "quicksort_compare_worst";
+constexpr char quicksortTime[] = "quicksort_time";
 
 enum Case { AVERAGE = 0, BEST = 1, WORST = 2 };
 
@@ -25,13 +26,18 @@ static const char *quicksortAssign = quicksortAssignAverage;
 static const char *quicksortCompare = quicksortCompareAverage;
 static const char *quicksortOps = quicksortOpsAverage;
 
-template <bool COUNT>
+template<bool COUNT, bool RANDO>
 static int partition(int arr[], const int left, const int right) {
-    const int pivot = arr[right];
-    if constexpr (COUNT) profiler.countOperation(quicksortAssign, N_SIZE);
+    if constexpr (RANDO) {
+        if (const int pivotIdx = left + rand() % (right - left + 1); pivotIdx != right) {
+            std::swap(arr[pivotIdx], arr[right]);
+            if constexpr (COUNT) profiler.countOperation(quicksortAssign, N_SIZE, 3);
+        }
+    }
+
     int i = left - 1;
     for (int j = left; j < right; j++) {
-        if (arr[j] <= pivot) {
+        if (arr[j] <= arr[right]) {
             i++;
             //No swap needed if i and j are at same index
             if (i != j) {
@@ -46,20 +52,25 @@ static int partition(int arr[], const int left, const int right) {
     return i + 1;
 }
 
-template <bool COUNT>
+template<bool COUNT, bool RANDO>
 static void quicksort(int arr[], const int left, const int right) {
     if (left >= right) {
         return;
     }
-    const int pos = partition<COUNT>(arr, left, right);
-    quicksort<COUNT>(arr, left, pos - 1);
-    quicksort<COUNT>(arr, pos + 1, right);
+    const int pos = partition<COUNT, RANDO>(arr, left, right);
+    quicksort<COUNT, RANDO>(arr, left, pos - 1);
+    quicksort<COUNT, RANDO>(arr, pos + 1, right);
 }
 
-template <bool COUNT>
+template<bool COUNT>
 static void quicksort(int arr[], const int n) {
     N_SIZE = n;
-    quicksort<COUNT>(arr, 0, n - 1);
+    quicksort<COUNT, false>(arr, 0, n - 1);
+}
+
+static void quicksortRando(int arr[], const int n) {
+    N_SIZE = n;
+    quicksort<false, true>(arr, 0, n - 1);
 }
 
 static void arrangeBestCase(int arr[], const int left, const int right) {
@@ -118,7 +129,7 @@ static void setupOperations(const Case testCase) {
 static void quicksortProfilingNumOfOps(const Case testCase) {
     std::cout << "profiling quicksort num of ops\n";
 
-    constexpr int maxSize = 3000;
+    constexpr int maxSize = 10000;
     const int numOfTests = testCase == AVERAGE ? 10 : 1;
     int arr[maxSize];
 
@@ -144,8 +155,10 @@ static void quicksortCompareCases() {
     quicksortProfilingNumOfOps(WORST);
     profiler.createGroup(quicksortCasesComparison, quicksortOpsAverage, quicksortOpsBest, quicksortOpsWorst);
     profiler.createGroup(quicksortAverageVsBest, quicksortOpsAverage, quicksortOpsBest);
-    profiler.createGroup(quicksortAssignCasesComparison, quicksortAssignAverage, quicksortAssignBest, quicksortAssignWorst);
-    profiler.createGroup(quicksortCompareCasesComparison, quicksortCompareAverage, quicksortCompareBest, quicksortCompareWorst);
+    profiler.createGroup(quicksortAssignCasesComparison, quicksortAssignAverage, quicksortAssignBest,
+                         quicksortAssignWorst);
+    profiler.createGroup(quicksortCompareCasesComparison, quicksortCompareAverage, quicksortCompareBest,
+                         quicksortCompareWorst);
     profiler.createGroup(quicksortCompareAverageVsBest, quicksortCompareAverage, quicksortCompareBest);
 }
 
@@ -160,6 +173,30 @@ static void checkQuicksortCorrectness() {
     printArray(arr, n);
 
     quicksort<false>(arr, n);
+
+    std::cout << "\nSorted array: ";
+    printArray(arr, n);
+
+    if (IsSorted(arr, n)) {
+        std::cout << "\nIt's sorted!\n";
+    } else {
+        std::cout << "\nNot sorted!\n";
+    }
+}
+
+static void checkQuicksortRandoCorrectness() {
+    std::cout << "\n==========================================\n";
+    std::cout << "\nChecking quicksort with random pivot correctness...\n";
+
+    constexpr int n = 8;
+    int arr[] = {4, 8, 1, 7, 8, 3, 2, 1};
+
+    std::cout << "\nInitial array: ";
+    printArray(arr, n);
+
+    //seeding random
+    srand(time(nullptr));
+    quicksortRando(arr, n);
 
     std::cout << "\nSorted array: ";
     printArray(arr, n);

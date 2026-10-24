@@ -5,14 +5,23 @@ constexpr char hybridAssign[] = "hybrid_quicksort_assign";
 constexpr char hybridCompare[] = "hybrid_quicksort_compare";
 constexpr char hybridQuicksort[] = "hybrid_quicksort";
 constexpr char hybridTime[] = "hybrid_quicksort_time";
-constexpr char DEFAULT_THRESHOLD = 50;
+constexpr char DEFAULT_THRESHOLD = 5;
+
+constexpr char quickVsHybridTiming[] = "quicksort_vs_hybrid_quicksort_timing";
+constexpr char quickVsHybridOps[] = "1_quicksort_vs_hybrid_quicksort_ops_comparison";
+constexpr char quickVsHybridAssign[] = "quicksort_vs_hybrid_quicksort_assign_comparison";
+constexpr char quickVsHybridCompare[] = "quicksort_vs_hybrid_quicksort_compare_comparison";
 
 template<bool COUNT>
 static void insertionSort(int arr[], const int left, const int right) {
     for (int i = left + 1; i <= right; i++) {
+        if (!greater<COUNT>(arr[i - 1], arr[i], hybridCompare)) continue;
+
         const int key = arr[i];
-        if constexpr (COUNT) profiler.countOperation(hybridAssign, N_SIZE);
-        int j = i - 1;
+        arr[i] = arr[i - 1]; // first shift is already known to be needed
+        if constexpr (COUNT) profiler.countOperation(hybridAssign, N_SIZE, 2);
+
+        int j = i - 2;
         while (j >= left && greater<COUNT>(arr[j], key, hybridCompare)) {
             arr[j + 1] = arr[j];
             if constexpr (COUNT) profiler.countOperation(hybridAssign, N_SIZE);
@@ -25,11 +34,9 @@ static void insertionSort(int arr[], const int left, const int right) {
 
 template<bool COUNT>
 static int partitionHybrid(int arr[], const int left, const int right) {
-    const int pivot = arr[right];
-    if constexpr (COUNT) profiler.countOperation(hybridAssign, N_SIZE);
     int i = left - 1;
     for (int j = left; j < right; j++) {
-        if (arr[j] <= pivot) {
+        if (arr[j] <= arr[right]) {
             i++;
             //No swap needed if i and j are at same index
             if (i != j) {
@@ -46,6 +53,9 @@ static int partitionHybrid(int arr[], const int left, const int right) {
 
 template<bool COUNT>
 static void quicksortHybrid(int arr[], const int left, const int right, const int threshold = DEFAULT_THRESHOLD) {
+    if (left >= right) {
+        return;
+    }
     if (right - left + 1 < threshold) {
         insertionSort<COUNT>(arr, left, right);
         return;
@@ -83,7 +93,7 @@ static void findThresholdsNumOfOps() {
         FillRandomArray(a, n);
     }
 
-    for (int threshold = 5; threshold <= 125; threshold++) {
+    for (int threshold = 2; threshold <= 30; threshold++) {
         std::cout << "\nThreshold: " << threshold;
         CopyArray(tempArr, arr, numOfOpsTests);
         for (auto &i: tempArr) {
@@ -101,12 +111,12 @@ static int median(int arr[], const int n) {
 }
 
 static void findThresholdsTiming() {
-    constexpr int thresholdMin = 5;
-    constexpr int thresholdMax = 125;
+    constexpr int thresholdMin = 2;
+    constexpr int thresholdMax = 80;
     constexpr int thresholdCount = thresholdMax - thresholdMin + 1;
-    constexpr int n = 1000;
+    constexpr int n = 10000;
     constexpr int workBatch = 15;
-    constexpr int rounds = 50;
+    constexpr int rounds = 300;
     //without static it's too big for the stack
     static int work[workBatch][n], src[workBatch][n];
     static int mins[thresholdCount] = {};
@@ -120,7 +130,7 @@ static void findThresholdsTiming() {
 
     //multiple rounds to remove random cpu spikes
     for (int round = 1; round <= rounds; round++) {
-        std::cout << "\nRound: " << round << " =====================";
+        std::cout << "\nRound: " << round << " / " << rounds << " =====================";
 
         //randomize tests order to remove bias from cpu throttling
         FillRandomArray(thresholds, thresholdCount, thresholdMin, thresholdMax, true, UNSORTED);
@@ -152,10 +162,10 @@ static void findThresholdsTiming() {
     }
 
     for (int i = 0; i < thresholdCount; i++) {
-        profiler.countOperation("min", i + thresholdMin, mins[i]);
-        profiler.countOperation("median", i + thresholdMin, median(samples[i], rounds));
+        profiler.countOperation("min_time", i + thresholdMin, mins[i]);
+        profiler.countOperation("median_time", i + thresholdMin, median(samples[i], rounds));
     }
-    profiler.createGroup("min vs median", "min", "median");
+    profiler.createGroup("Min_time_vs_Median_time", "min_time", "median_time");
 }
 
 static void checkHybridQuicksortCorrectness() {
